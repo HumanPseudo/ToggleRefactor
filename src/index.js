@@ -5,6 +5,8 @@ import { toolbox, enableLineBreaks, readOnlySupported } from './actions';
 import { toggleBlockConstructor } from './toggle/toggleBlockConstructor';
 import { isAToggleItem, isAToggleRoot } from './toggle/actions';
 import { createParagraphFromToggleRoot } from './toggle/createParagraphFromToggleRoot';
+import { setAttributesToNewBlock } from './toggle/setAttributesToNewBlock';
+
 /**
  * ToggleBlock for the Editor.js
  * Creates a toggle and paragraphs can be saved in it.
@@ -37,36 +39,11 @@ export default class ToggleBlock {
    * Calls the method to add the required properties to the new block.
    */
   createParagraphFromIt() {
-    this.setAttributesToNewBlock();
+    setAttributesToNewBlock.call();
   }
 
-  /**
-   * Gets the index of the new block, then assigns the required properties,
-   * and finally sends the focus.
-   */
-  setAttributesToNewBlock(entryIndex = null, foreignKey = this.wrapper.id, block = null) {
-    const index = entryIndex === null ? this.api.blocks.getCurrentBlockIndex() : entryIndex;
-    const newBlock = block || this.api.blocks.getBlockByIndex(index);
-
-    const id = uuidv4();
-    if (!this.itemsId.includes(newBlock.id)) {
-      this.itemsId.splice(index - 1, 0, newBlock.id);
-    }
-
-    const { holder } = newBlock;
-    const content = holder.firstChild;
-    const item = content.firstChild;
-
-    holder.setAttribute('foreignKey', foreignKey);
-    holder.setAttribute('id', id);
-
-    setTimeout(() => holder.classList.add('toggle-block__item'));
-
-    if (!this.readOnly) {
-      holder.onkeydown = this.setEventsToNestedBlock.bind(this);
-      item.focus();
-    }
-  }
+  
+ 
 
   /**
    * Sets the events to be listened through the holder
@@ -197,7 +174,7 @@ export default class ToggleBlock {
    */
   clickInDefaultContent() {
     this.api.blocks.insert();
-    this.setAttributesToNewBlock();
+    setAttributesToNewBlock.call();
     this.setDefaultContent();
   }
 
@@ -394,7 +371,7 @@ export default class ToggleBlock {
         const content = cover.firstChild;
 
         if (!this.isPartOfAToggle(content)) {
-          this.setAttributesToNewBlock(i);
+          setAttributesToNewBlock.call(i);
           j += 1;
         } else {
           this.data.items = j;
@@ -872,7 +849,7 @@ export default class ToggleBlock {
         ?? dropTarget.querySelector('.toggle-block__selector').getAttribute('id');
 
       const newToggleIndex = this.getIndex(this.holderDragged);
-      this.setAttributesToNewBlock(newToggleIndex, foreignKey);
+      setAttributesToNewBlock.call(newToggleIndex, foreignKey);
     }
   }
 
@@ -915,7 +892,7 @@ export default class ToggleBlock {
       const { length: existingToggleItemsCount } = document.querySelectorAll(`div[foreignKey="${this.data.fk}"]`);
 
       if (this.itemsId.includes(block.id) && currentBlockValidation) {
-        this.setAttributesToNewBlock(index);
+        setAttributesToNewBlock.call(index);
       } else if (
         mutation.addedNodes[0]
         && mutation?.previousSibling
@@ -925,7 +902,7 @@ export default class ToggleBlock {
       ) {
         const { id: addedBlockId } = mutation.addedNodes[0];
         const addedBlock = this.api.blocks.getById(addedBlockId);
-        this.setAttributesToNewBlock(null, this.wrapper.id, addedBlock);
+        setAttributesToNewBlock.call(null, this.wrapper.id, addedBlock);
         this.itemsId[index] = block.id;
       }
     }
@@ -978,7 +955,7 @@ export default class ToggleBlock {
 
     if (willBeABlock) {
       holder.removeAttribute('will-be-a-nested-block');
-      this.setAttributesToNewBlock(blockIndex);
+      setAttributesToNewBlock.call(blockIndex);
       this.api.toolbar.close();
     }
   }
