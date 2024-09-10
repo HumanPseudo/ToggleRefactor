@@ -39,7 +39,7 @@ export default class ToggleBlock {
    * Calls the method to add the required properties to the new block.
    */
   createParagraphFromIt() {
-    setAttributesToNewBlock.call();
+    setAttributesToNewBlock.call(this);
   }
 
   
@@ -174,7 +174,7 @@ export default class ToggleBlock {
    */
   clickInDefaultContent() {
     this.api.blocks.insert();
-    setAttributesToNewBlock.call();
+    setAttributesToNewBlock.call(this);
     this.setDefaultContent();
   }
 
@@ -371,7 +371,7 @@ export default class ToggleBlock {
         const content = cover.firstChild;
 
         if (!this.isPartOfAToggle(content)) {
-          setAttributesToNewBlock.call(i);
+          setAttributesToNewBlock.call(this,i);
           j += 1;
         } else {
           this.data.items = j;
@@ -849,7 +849,7 @@ export default class ToggleBlock {
         ?? dropTarget.querySelector('.toggle-block__selector').getAttribute('id');
 
       const newToggleIndex = this.getIndex(this.holderDragged);
-      setAttributesToNewBlock.call(newToggleIndex, foreignKey);
+      setAttributesToNewBlock.call(this,newToggleIndex, foreignKey);
     }
   }
 
@@ -892,7 +892,7 @@ export default class ToggleBlock {
       const { length: existingToggleItemsCount } = document.querySelectorAll(`div[foreignKey="${this.data.fk}"]`);
 
       if (this.itemsId.includes(block.id) && currentBlockValidation) {
-        setAttributesToNewBlock.call(index);
+        setAttributesToNewBlock.call(this,index);
       } else if (
         mutation.addedNodes[0]
         && mutation?.previousSibling
@@ -902,7 +902,7 @@ export default class ToggleBlock {
       ) {
         const { id: addedBlockId } = mutation.addedNodes[0];
         const addedBlock = this.api.blocks.getById(addedBlockId);
-        setAttributesToNewBlock.call(null, this.wrapper.id, addedBlock);
+        setAttributesToNewBlock.call(this,null, this.wrapper.id, addedBlock);
         this.itemsId[index] = block.id;
       }
     }
@@ -955,7 +955,7 @@ export default class ToggleBlock {
 
     if (willBeABlock) {
       holder.removeAttribute('will-be-a-nested-block');
-      setAttributesToNewBlock.call(blockIndex);
+      setAttributesToNewBlock.call(this,blockIndex);
       this.api.toolbar.close();
     }
   }

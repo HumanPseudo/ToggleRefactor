@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 /**
    * Gets the index of the new block, then assigns the required properties,
    * and finally sends the focus.

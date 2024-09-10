@@ -33,7 +33,7 @@ export function createParagraphFromToggleRoot(e) {
       blockContent.children[1].innerHTML = content.slice(currentPosition.focusOffset, end);
   
       this.api.blocks.insert('paragraph', { text: newText }, {}, originalIndex + 1, 1);
-      setAttributesToNewBlock.call();
+      setAttributesToNewBlock.call(this);
     }
   }
   
