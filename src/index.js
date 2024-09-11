@@ -2,10 +2,17 @@ import './index.css';
 import { v4 as uuidv4 } from 'uuid';
 import toggleIcon from '../assets/toggleIcon.svg';
 import { toolbox, enableLineBreaks, readOnlySupported } from './actions';
+
+
+// Toggle Imports
+// ToDo : createToggle and removeFullToggle
 import { toggleBlockConstructor } from './toggle/toggleBlockConstructor';
-import { isAToggleItem, isAToggleRoot } from './toggle/actions';
+import { isAToggleItem, isAToggleRoot, setFocusToggleRootAtTheEnd, resolveToggleAction, assignToggleItemAttributes, findToggleRootIndex, highlightToggleItems, isPartOfAToggle } from './toggle/actions';
 import { createParagraphFromToggleRoot } from './toggle/createParagraphFromToggleRoot';
 import { setAttributesToNewBlock } from './toggle/setAttributesToNewBlock';
+import { moveToggle } from './toggle/moveToggle';
+import { removeFullToggle } from './toggle/removeFullToggle';
+
 
 /**
  * ToggleBlock for the Editor.js
@@ -35,9 +42,6 @@ export default class ToggleBlock {
   createParagraphFromToggleRoot(e) {
     createParagraphFromToggleRoot.call(this, e);
   }
-  /**
-   * Calls the method to add the required properties to the new block.
-   */
   createParagraphFromIt() {
     setAttributesToNewBlock.call(this);
   }
@@ -157,16 +161,8 @@ export default class ToggleBlock {
    * Sets the focus at the end of the toggle root when
    * a nested block is deleted through the backspace key.
    */
-  setFocusToggleRootAtTheEnd() {
-    const toggle = document.activeElement;
-    const selection = window.getSelection();
-    const range = document.createRange();
-
-    selection.removeAllRanges();
-    range.selectNodeContents(toggle);
-    range.collapse(false);
-    selection.addRange(range);
-    toggle.focus();
+  setFocusToggleRootAtTheEnd(){
+    setFocusToggleRootAtTheEnd.call(this);
   }
 
   /**
@@ -231,19 +227,7 @@ export default class ToggleBlock {
   * @returns {number} The Toggle's root index
   */
   findToggleRootIndex(entryIndex, fk) {
-    const block = this.getBlockByIndex(entryIndex);
-    const { holder } = block;
-
-    if (this.isAToggleRoot(holder)) {
-      const id = holder.querySelector('.toggle-block__selector').getAttribute('id');
-      if (fk === id) {
-        return entryIndex;
-      }
-    }
-    if (entryIndex - 1 >= 0) {
-      return this.findToggleRootIndex(entryIndex - 1, fk);
-    }
-    return -1;
+    findToggleRootIndex.call(this, entryIndex, fk);
   }
 
   /**
@@ -392,28 +376,8 @@ export default class ToggleBlock {
     this.hideAndShowBlocks();
   }
 
-  /**
-   * Converts the toggle status to its opposite.
-   * If the toggle status is open, then now will be closed and
-   * the icon will reset to rotation. Otherwise, will be open
-   * and the icon will be rotated 90 degrees to the left.
-   *
-   * @returns {string} icon - toggle icon
-   */
   resolveToggleAction() {
-    const icon = this.wrapper.firstChild;
-    const svg = icon.firstChild;
-
-    if (this.data.status === 'closed') {
-      this.data.status = 'open';
-      svg.style.transform = 'rotate(90deg)';
-    } else {
-      this.data.status = 'closed';
-      svg.style.transform = 'rotate(0deg)';
-    }
-
-    const toggleBlock = this.api.blocks.getBlockByIndex(this.api.blocks.getCurrentBlockIndex());
-    toggleBlock.holder.setAttribute('status', this.data.status);
+    resolveToggleAction.call(this);
   }
 
   /**
@@ -480,21 +444,8 @@ export default class ToggleBlock {
     });
     return counter;
   }
-
-  /**
-   * Highlight the blocks that belongs to the Toggle
-   * @param {string} fk - The id of the root Toggle
-   */
   highlightToggleItems(fk) {
-    const listChildren = document.querySelectorAll(`div[foreignKey="${fk}"]`);
-    listChildren.forEach((child) => {
-      child.classList.add('ce-block--selected');
-      // Evaluate if the child is a toggle, then highlight also its children
-      if (child.hasAttribute('status')) {
-        const childId = child.querySelector('.toggle-block__selector').getAttribute('id');
-        this.highlightToggleItems(childId);
-      }
-    });
+    highlightToggleItems.call(this, fk);
   }
 
   /**
@@ -556,32 +507,8 @@ export default class ToggleBlock {
       }
     });
   }
-
-  /**
-   * Move the Toggle with all its children and nested toggles.
-   * Index of the root toggle before it is moved by editorjs core.
-   * @param {number} toggleInitialIndex
-   * @param {number} direction // 0: Move down || 1: Move up
-   */
   moveToggle(toggleInitialIndex, direction) {
-    if (!this.readOnly) {
-      this.close();
-      const currentToggleIndex = this.getCurrentBlockIndex();
-      const descendants = this.getDescendantsNumber(this.wrapper.id);
-      const blocks = this.getBlocksCount();
-      const toggleEndIndex = toggleInitialIndex + descendants;
-
-      // Move back the root of the Toggle to its initial position
-      this.move(toggleInitialIndex, currentToggleIndex);
-
-      if (toggleInitialIndex >= 0 && toggleEndIndex <= (blocks - 1)) {
-        if (direction === 0) {
-          this.moveDown(toggleInitialIndex, toggleEndIndex);
-        } else {
-          this.moveUp(toggleInitialIndex, toggleEndIndex);
-        }
-      }
-    }
+    moveToggle.call(this, toggleInitialIndex, direction);
   }
 
   /**
@@ -682,19 +609,8 @@ export default class ToggleBlock {
       children -= 1;
     }
   }
-
-  /**
-   * Removes a toggle root and its nested blocks.
-   *
-   * @param {number} toggleIndex - toggle index
-   */
   removeFullToggle(toggleIndex) {
-    const children = document.querySelectorAll(`div[foreignKey="${this.wrapper.id}"]`);
-    const { length } = children;
-
-    for (let i = toggleIndex; i < toggleIndex + length; i += 1) {
-      setTimeout(() => this.api.blocks.delete(toggleIndex));
-    }
+    removeFullToggle.call(this, toggleIndex);
   }
 
   /**
@@ -844,13 +760,7 @@ export default class ToggleBlock {
   }
 
   assignToggleItemAttributes(isTargetAToggle, dropTarget) {
-    if (isTargetAToggle) {
-      const foreignKey = dropTarget.getAttribute('foreignKey')
-        ?? dropTarget.querySelector('.toggle-block__selector').getAttribute('id');
-
-      const newToggleIndex = this.getIndex(this.holderDragged);
-      setAttributesToNewBlock.call(this,newToggleIndex, foreignKey);
-    }
+    assignToggleItemAttributes.call(this, isTargetAToggle, dropTarget);
   }
 
   moveChildren(endBlock, fk = this.wrapper.id) {
@@ -960,24 +870,8 @@ export default class ToggleBlock {
     }
   }
 
-  /**
-   * Validates if a block contains one of the classes to be
-   * part of a toggle. If It has it returns 'true' (It's part
-   * of a toggle), otherwise returns 'false' (It's another
-   * type of block)
-   *
-   * @param {HTMLDivElement} block - Block to be validated
-   * @returns {boolean}
-   */
   isPartOfAToggle(block) {
-    const classes = Array.from(block.classList);
-    const classNamesToCheck = ['toggle-block__item', 'toggle-block__input', 'toggle-block__selector'];
-    const isToggleChild = classNamesToCheck.some(
-      (className) => block.getElementsByClassName(className).length !== 0,
-    );
-    const isToggle = classNamesToCheck.some((className) => classes.includes(className));
-
-    return isToggle || isToggleChild;
+    isPartOfAToggle.call(this, block);
   }
 
   /**
