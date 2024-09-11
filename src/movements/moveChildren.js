@@ -1,4 +1,4 @@
-export function moveChildren() {
+export function moveChildren(endBlock, fk = this.wrapper.id) {
   // Get the children of the dropped toggle
   let children = document.querySelectorAll(`div[foreignKey="${fk}"]`);
 
@@ -15,7 +15,7 @@ export function moveChildren() {
       const toggleIndex = this.getIndex(child);
       const fix = this.startBlock < endBlock ? 0 : 1;
       toggles.forEach((toggle) =>
-        this.moveChildren(toggleIndex + fix, toggle.getAttribute("id"))
+        moveChildren(toggleIndex + fix, toggle.getAttribute("id"))
       );
 
       const dif = Math.abs(endBlock - toggleIndex);

@@ -1,5 +1,4 @@
 import "./index.css";
-import { v4 as uuidv4 } from "uuid";
 import toggleIcon from "../assets/toggleIcon.svg";
 import { toolbox, enableLineBreaks, readOnlySupported } from "./actions";
 
@@ -270,7 +269,7 @@ export default class ToggleBlock {
 
 
   render() {
-    render.call(this);
+    return render.call(this);
   }
 
   /**
@@ -353,7 +352,7 @@ export default class ToggleBlock {
   }
 
   renderSettings() {
-    renderSettings.call(this);
+    return renderSettings.call(this);
   }
 
   /**
