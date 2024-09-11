@@ -25,7 +25,9 @@ import { setEventsToNestedBlock } from "./nest/setEventsToNestedBlock";
 import { moveToggle } from './toggle/moveToggle';
 import { removeFullToggle } from './toggle/removeFullToggle';
 import { setNestedBlockAttributes } from "./nest/setNestedBlockAttributes";
-
+import { render } from "./render/render";
+import { renderItems } from "./render/renderItems";
+import { renderSettings } from "./render/renderSettings";
 
 /**
  * ToggleBlock for the Editor.js
@@ -266,23 +268,9 @@ export default class ToggleBlock {
     }
   }
 
-  /**
-   * Renders Tool's view.
-   * First renders the toggle root, and immediately
-   * renders its items as new blocks under the root.
-   *
-   * @returns {HTMLDivElement}
-   */
+
   render() {
-    this.createToggle();
-
-    // Renders the nested blocks after the toggle root is rendered
-    setTimeout(() => this.renderItems());
-
-    // Adds initial transition for the icon
-    setTimeout(() => this.setInitialTransition());
-
-    return this.wrapper;
+    render.call(this);
   }
 
   /**
@@ -298,82 +286,8 @@ export default class ToggleBlock {
     svg.style.transform = `rotate(${status === "closed" ? 0 : 90}deg)`;
   }
 
-  /**
-   * Renders the items view and assigns the properties required to look
-   * like a block inside the toggle.
-   */
   renderItems() {
-    const blocksInEditor = this.api.blocks.getBlocksCount();
-    const icon = this.wrapper.firstChild;
-    let toggleRoot;
-
-    if (this.readOnly) {
-      const redactor = document.getElementsByClassName(
-        "codex-editor__redactor"
-      )[0];
-      const { children } = redactor;
-      const { length } = children;
-
-      for (let i = 0; i < length; i += 1) {
-        const blockCover = children[i].firstChild;
-        const blockContainer = blockCover.firstChild;
-        const { id } = blockContainer;
-
-        if (id === this.wrapper.id) {
-          toggleRoot = i;
-          break;
-        }
-      }
-    } else {
-      const toggle = this.wrapper.children[1];
-      let currentBlock = {};
-      let index = this.api.blocks.getCurrentBlockIndex();
-      const delta = index === blocksInEditor - 1 ? -1 : 1;
-
-      while (currentBlock[1] !== toggle) {
-        toggleRoot = index;
-        const block = this.api.blocks.getBlockByIndex(toggleRoot);
-        if (!block) break;
-        const { holder } = block;
-        const blockCover = holder.firstChild;
-        const blockContent = blockCover.firstChild;
-        currentBlock = blockContent.children;
-
-        index += delta;
-      }
-    }
-
-    if (toggleRoot + this.data.items < blocksInEditor) {
-      for (
-        let i = toggleRoot + 1, j = 0;
-        i <= toggleRoot + this.data.items;
-        i += 1
-      ) {
-        const block = this.api.blocks.getBlockByIndex(i);
-        const { holder } = block;
-        const cover = holder.firstChild;
-        const content = cover.firstChild;
-
-        if (!this.isPartOfAToggle(content)) {
-          this.setAttributesToNewBlock(i);
-          j += 1;
-        } else {
-          this.data.items = j;
-          break;
-        }
-      }
-    } else {
-      this.data.items = 0;
-    }
-
-    icon.addEventListener("click", () => {
-      this.resolveToggleAction();
-      setTimeout(() => {
-        this.hideAndShowBlocks();
-      });
-    });
-
-    this.hideAndShowBlocks();
+    renderItems.call(this);
   }
 
   resolveToggleAction() {
@@ -438,34 +352,8 @@ export default class ToggleBlock {
     });
   }
 
-  /**
-   * Adds events for the move up, move down and delete options in the toolbar
-   */
   renderSettings() {
-    const settingsBar = document.getElementsByClassName("ce-settings");
-    const optionsContainer = settingsBar[0];
-
-    setTimeout(() => {
-      const options = optionsContainer.lastChild;
-      const toggleIndex = this.api.blocks.getCurrentBlockIndex();
-      this.highlightToggleItems(this.wrapper.id);
-
-      const moveUpElement =
-        options.querySelector('[data-item-name="move-up"]') ||
-        options.getElementsByClassName("ce-tune-move-up")[0];
-      const moveDownElement =
-        options.querySelector('[data-item-name="move-down"]') ||
-        options.getElementsByClassName("ce-tune-move-down")[0];
-      const deleteElement =
-        options.querySelector('[data-item-name="delete"]') ||
-        options.getElementsByClassName("ce-settings__button--delete")[0];
-
-      this.addEventsMoveButtons(moveDownElement, 0, toggleIndex);
-      this.addEventsMoveButtons(moveUpElement, 1, toggleIndex);
-      this.addEventDeleteButton(deleteElement, toggleIndex);
-    });
-
-    return document.createElement("div");
+    renderSettings.call(this);
   }
 
   /**
