@@ -4,10 +4,15 @@ import { toolbox, enableLineBreaks, readOnlySupported } from "./actions";
 
 
 // Toggle Imports
-// ToDo : createToggle, removeFullToggle, removeToggle
-import { isAToggleItem, isAToggleRoot, setFocusToggleRootAtTheEnd, resolveToggleAction, assignToggleItemAttributes, findToggleRootIndex, highlightToggleItems, isPartOfAToggle, addEventsMoveButtons, moveToggle, removeFullToggle, addSupportForCopyAndPasteAction} from "./toggle/actions";
+// ToDo : createToggle and removeFullToggle
 import { toggleBlockConstructor } from "./toggle/toggleBlockConstructor";
+import { isAToggleItem, isAToggleRoot, setFocusToggleRootAtTheEnd, resolveToggleAction, assignToggleItemAttributes, findToggleRootIndex, highlightToggleItems, isPartOfAToggle } from "./toggle/actions";
 import { createParagraphFromToggleRoot } from "./toggle/createParagraphFromToggleRoot";
+import { moveToggle } from "./toggle/moveToggle";
+import { removeFullToggle } from "./toggle/removeFullToggle";
+
+// Block Imports
+
 
 // Block Imports
 import { setAttributesToNewBlock } from "./blocks/setAttributesToNewBlock";
@@ -17,13 +22,17 @@ import { removeBlock, removeAttributesFromNewBlock } from "./blocks/removeBlockA
 import { resetIdToCopiedBlock } from "./blocks/resetIdToCopiedBlock";
 import { save } from "./blocks/save";
 
+// Movement Imports
+
 
 // Movements Imports
 import { moveChildren } from "./movements/moveChildren";
 import { isChild } from "./movements/isChild";
 import { moveDescendants } from "./movements/moveDescendants";
 import { moveDown } from "./movements/moveDown";
-import {moveUp} from "./movements/moveUp";
+import { moveUp } from "./movements/moveUp";
+
+// Nest Imports
 
 
 // Nest Imports
@@ -31,15 +40,14 @@ import { nestBlock } from "./nest/nestBlock";
 import { setEventsToNestedBlock } from "./nest/setEventsToNestedBlock";
 import { setNestedBlockAttributes } from "./nest/setNestedBlockAttributes";
 
+// Render Imports
+
 
 // Render Imports
 import { render } from "./render/render";
 import { renderItems } from "./render/renderItems";
 import { renderSettings } from "./render/renderSettings";
-
-
-// Actions Imports
-import { addEventDeleteButton, addListeners, clickInDefaultContent, getDescendantsNumber, restoreItemAttributes,setDefaultContent, setInitialTransition, setPlaceHolde } from "./actions/actions";
+import { addEventDeleteButton, addListeners, clickInDefaultContent, getDescendantsNumber, restoreItemAttributes,setDefaultContent, setInitialTransition } from "./actions/actions";
 
 /**
  * ToggleBlock for the Editor.js
@@ -158,10 +166,18 @@ export default class ToggleBlock {
     setFocusToggleRootAtTheEnd.call(this);
   }
 
+  /**
+   * Adds the actions to do when the default content is clicked.
+   */
   clickInDefaultContent() {
     clickInDefaultContent.call(this);
   }
 
+  /**
+   * Sets the default content. If the toggle has no other blocks inside it,
+   * so sets the 'block__hidden tag' in the default content,
+   * otherwise it removes it.
+   */
   setDefaultContent() {
     setDefaultContent.call(this);
   }
@@ -204,6 +220,13 @@ export default class ToggleBlock {
     }
   }
 
+  /**
+   * Returns the toggle's root index, given the index of one of its children
+   *
+   * @param {number} entryIndex - block index
+   * @param {String} fk - The block's foreign key
+   * @returns {number} The Toggle's root index
+   */
   findToggleRootIndex(entryIndex, fk) {
     findToggleRootIndex.call(this, entryIndex, fk);
   }
@@ -227,6 +250,11 @@ export default class ToggleBlock {
     return render.call(this);
   }
 
+  /**
+   * Adds the initial status for the icon, and establishes
+   * the delay for the transition displayed when the icon
+   * is clicked.
+   */
   setInitialTransition() {
     setInitialTransition.call(this);
   }
@@ -249,7 +277,7 @@ export default class ToggleBlock {
    * @returns {ToggleBlockData} - saved data
    */
 
-  save(blockContent) {
+       save(blockContent) {
         save.call(this, blockContent);
       }
   
@@ -264,8 +292,17 @@ export default class ToggleBlock {
     return renderSettings.call(this);
   }
 
+  /**
+   * Add listener to move button.
+   * @param {HTMLDivElement} moveElement
+   * @param {number} movement // 0: Move down || 1: Move up
+   * @param {number} toggleIndex
+   */
   addEventsMoveButtons(moveElement, movement, toggleIndex) {
-    addEventsMoveButtons.call(this, moveElement, movement, toggleIndex);
+    if (!moveElement) return;
+    moveElement.addEventListener("click", () => {
+      this.moveToggle(toggleIndex, movement);
+    });
   }
 
   addEventDeleteButton(deleteElement, toggleIndex) {
@@ -296,7 +333,10 @@ export default class ToggleBlock {
     removeFullToggle.call(this, toggleIndex);
   }
 
-
+  /**
+   * Adds the required listeners to call the toggle shortcuts
+   * on the editor.
+   */
   addListeners() {
     addListeners.call(this);
   }
@@ -474,9 +514,20 @@ export default class ToggleBlock {
   }
 
   isPartOfAToggle(block) {
-    isPartOfAToggle.call(this, block);
+    const classes = Array.from(block.classList);
+    const classNamesToCheck = ['toggle-block__item', 'toggle-block__input', 'toggle-block__selector'];
+    const isToggleChild = classNamesToCheck.some(
+      (className) => block.getElementsByClassName(className).length !== 0,
+    );
+    const isToggle = classNamesToCheck.some((className) => classes.includes(className));
+
+    return isToggle || isToggleChild;
   }
-  
+
+  /**
+   * Adds mutation observer to reset the toggle ids
+   * when a toggle is copied and pasted.
+   */
   addSupportForCopyAndPasteAction() {
     addSupportForCopyAndPasteAction.call(this);
   }

@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
    * and finally sends the focus.
    */
 
-export function setAttributesToNewBlock(entryIndex = null, foreignKey, block = null) {
+export function setAttributesToNewBlock(entryIndex = null, foreignKey = this.wrapper.id, block = null) {
     const index = entryIndex === null ? this.api.blocks.getCurrentBlockIndex() : entryIndex;
     const newBlock = block || this.api.blocks.getBlockByIndex(index);
 

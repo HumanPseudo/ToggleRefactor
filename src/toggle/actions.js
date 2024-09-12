@@ -13,7 +13,7 @@ function isAToggleItem(holder) {
  * @returns {boolean}
  */
 function isAToggleRoot(holder) {
-    return holder.classList.contains('toggle-block__root')|| Boolean(holder.querySelector('.toggle-block__selector'));
+    return holder.classList.contains('toggle-block__selector')|| Boolean(holder.querySelector('.toggle-block__selector'));
 }
 
 /**
@@ -63,7 +63,7 @@ function assignToggleItemAttributes(isTargetAToggle, dropTarget) {
       ?? dropTarget.querySelector('.toggle-block__selector').getAttribute('id')
 
     const newToggleIndex = this.getIndex(this.holderDragged);
-    setAttributesToNewBlock.call(this, newToggleIndex, foreignKey);
+    this.setAttributesToNewBlock(newToggleIndex, foreignKey);
   }
 }
 
