@@ -1,29 +1,36 @@
 import "./index.css";
 import toggleIcon from "../assets/toggleIcon.svg";
 import { toolbox, enableLineBreaks, readOnlySupported } from "./actions";
-
-
 // Toggle Imports
 // ToDo : createToggle and removeFullToggle
 import { toggleBlockConstructor } from "./toggle/toggleBlockConstructor";
 import { isAToggleItem, isAToggleRoot, setFocusToggleRootAtTheEnd, resolveToggleAction, assignToggleItemAttributes, findToggleRootIndex, highlightToggleItems, isPartOfAToggle } from "./toggle/actions";
 import { createParagraphFromToggleRoot } from "./toggle/createParagraphFromToggleRoot";
+import { moveToggle } from './toggle/moveToggle';
+import { removeFullToggle } from './toggle/removeFullToggle';
+
+// Block Imports
+
 import { setAttributesToNewBlock } from "./blocks/setAttributesToNewBlock";
 import { findIndexOfParentBlock, extractBlock } from "./blocks/getParents";
 import { hideAndShowBlocks } from "./blocks/hideAndShowBlocks";
 import { removeBlock, removeAttributesFromNewBlock } from "./blocks/removeBlockAndAttributes";
 import { resetIdToCopiedBlock } from "./blocks/resetIdToCopiedBlock";
 import { save } from "./blocks/save";
+
+// Movement Imports
 import { moveChildren } from "./movements/moveChildren";
 import { isChild } from "./movements/isChild";
 import { moveDescendants } from "./movements/moveDescendants";
 import { moveDown } from "./movements/moveDown";
 import {moveUp} from "./movements/moveUp";
+
+// Nest Imports
 import { nestBlock } from "./nest/nestBlock";
 import { setEventsToNestedBlock } from "./nest/setEventsToNestedBlock";
-import { moveToggle } from './toggle/moveToggle';
-import { removeFullToggle } from './toggle/removeFullToggle';
 import { setNestedBlockAttributes } from "./nest/setNestedBlockAttributes";
+
+// Render Imports
 import { render } from "./render/render";
 import { renderItems } from "./render/renderItems";
 import { renderSettings } from "./render/renderSettings";
@@ -47,6 +54,7 @@ export default class ToggleBlock {
   constructor(options) {
     toggleBlockConstructor.call(this, options);
   }
+
   isAToggleItem(holder) {
     return isAToggleItem(holder);
   }
@@ -58,7 +66,8 @@ export default class ToggleBlock {
   createParagraphFromToggleRoot(e) {
     createParagraphFromToggleRoot.call(this, e);
   }
-  /**
+  
+  /**isAToggleRoot
    * Calls the method to add the required properties to the new block.
    */
   createParagraphFromIt() {
@@ -315,8 +324,8 @@ export default class ToggleBlock {
    * @returns {ToggleBlockData} - saved data
    */
 
-       save(blockContent) {
-        save.call(this, blockContent);
+        save(blockContent) {
+        return save.call(this, blockContent);
       }
   
 
@@ -414,7 +423,7 @@ export default class ToggleBlock {
 
   
   moveUp(toggleInitialIndex, toggleEndIndex) {
-    moveUp.call(this, toggleInitialIndex, toggleEndIndex);
+    return moveUp.call(this, toggleInitialIndex, toggleEndIndex);
   }
 
   findIndexOfParentBlock(currentToggleFk, blockFk, toggleInitialIndex) {
@@ -425,6 +434,7 @@ export default class ToggleBlock {
   moveDescendants(children, finalIndex, parentInitialIndex, direction) {
     moveDescendants.call(this, children, finalIndex, parentInitialIndex, direction);
   }
+  
   removeFullToggle(toggleIndex) {
     const children = document.querySelectorAll(`div[foreignKey="${this.wrapper.id}"]`);
     const { length } = children;
