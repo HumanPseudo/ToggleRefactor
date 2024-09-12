@@ -42,21 +42,19 @@ function setFocusToggleRootAtTheEnd() {
  */
 
 function resolveToggleAction() {
+  const icon = this.wrapper.firstChild;
+  const svg = icon.firstChild;
 
-    const icon = this.wrapper.firstChild;
-    const svg = icon.firstChild;
+  if (this.data.status === 'closed') {
+    this.data.status = 'open';
+    svg.style.transform = 'rotate(90deg)';
+  } else {
+    this.data.status = 'closed';
+    svg.style.transform = 'rotate(0deg)';
+  }
 
-    if (this.data.status === 'closed') {
-        this.data.status = 'open';
-        svg.style.transform = 'rotate(90deg)';
-    } else {
-        this.data.status = 'closed';
-        svg.style.transform = 'rotate(0deg)';
-    }
-
-    const toggleBlock = this.api.blocks.getBlockByIndex(this.api.blocks.getCurrentBlockIndex());
-    toggleBlock.holder.setAttribute('status', this.data.status);
-    
+  const toggleBlock = this.api.blocks.getBlockByIndex(this.api.blocks.getCurrentBlockIndex());
+  toggleBlock.holder.setAttribute('status', this.data.status);
 }
 
 function assignToggleItemAttributes(isTargetAToggle, dropTarget) {
@@ -131,6 +129,84 @@ function isPartOfAToggle(block) {
   return isToggle || isToggleChild;
 }
 
+/**
+ * Add listener to move button.
+ * @param {HTMLDivElement} moveElement
+ * @param {number} movement // 0: Move down || 1: Move up
+ * @param {number} toggleIndex
+ */
+export function addEventsMoveButtons() {
+  if (!moveElement) return;
+  moveElement.addEventListener("click", () => {
+    this.moveToggle(toggleIndex, movement);
+  });
+}
+
+/**
+ * Move the toggle in the given direction.
+ * @param {number} toggleInitialIndex
+ * @param {number} direction
+ * @returns
+ */
+export function moveToggle(toggleInitialIndex, direction) {
+  if (!this.readOnly) {
+    this.close();
+    const currentToggleIndex = this.getCurrentBlockIndex();
+    const descendants = this.getDescendantsNumber(this.wrapper.id);
+    const blocks = this.getBlocksCount();
+    const toggleEndIndex = toggleInitialIndex + descendants;
+
+    // Move back the root of the Toggle to its initial position
+    this.move(toggleInitialIndex, currentToggleIndex);
+
+    if (toggleInitialIndex >= 0 && toggleEndIndex <= (blocks - 1)) {
+      if (direction === 0) {
+        this.moveDown(toggleInitialIndex, toggleEndIndex);
+      } else {
+        this.moveUp(toggleInitialIndex, toggleEndIndex);
+      }
+    }
+  }
+}
+
+/**
+ * Delete the toggle and all its children.
+ * @param {number} toggleInitialIndex
+ * @param {number} toggleEndIndex
+ * @returns
+ * @param {*} toggleIndex 
+ */
+
+export function removeFullToggle(toggleIndex) {
+  const children = document.querySelectorAll(`div[foreignKey="${this.wrapper.id}"]`);
+  const { length } = children;
+
+  for (let i = toggleIndex; i < toggleIndex + length; i += 1) {
+    setTimeout(() => this.api.blocks.delete(toggleIndex));
+  }
+}
+
+/**
+ * Adds mutation observer to reset the toggle ids
+ * when a toggle is copied and pasted.
+ */
+export function addSupportForCopyAndPasteAction() {
+  if (!this.readOnly) {
+    const target = document.querySelector("div.codex-editor__redactor");
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === "childList") {
+          setTimeout(resetIdToCopiedBlock.bind(this, mutation));
+        }
+      });
+    });
+
+    const config = { attributes: true, childList: true, characterData: true };
+
+    observer.observe(target, config);
+  }
+}
 
 export { isAToggleItem, isAToggleRoot, setFocusToggleRootAtTheEnd, resolveToggleAction, assignToggleItemAttributes, findToggleRootIndex ,highlightToggleItems, isPartOfAToggle};
   
