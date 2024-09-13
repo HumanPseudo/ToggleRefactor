@@ -1,9 +1,7 @@
 import "./index.css";
 import toggleIcon from "../assets/toggleIcon.svg";
-import { toolbox, enableLineBreaks, readOnlySupported } from "./actions";
 
 // Toggle Imports
-// ToDo : createToggle, removeFullToggle, removeToggle
 import {
   isAToggleItem,
   isAToggleRoot,
@@ -57,6 +55,7 @@ import {
   restoreItemAttributes,
   setDefaultContent,
   setInitialTransition,
+  toolbox, enableLineBreaks, readOnlySupported,
   setPlaceHolder,
 } from "./actions/actions";
 
@@ -231,13 +230,7 @@ export default class ToggleBlock {
     }
   }
 
-  /**
-   * Returns the toggle's root index, given the index of one of its children
-   *
-   * @param {number} entryIndex - block index
-   * @param {String} fk - The block's foreign key
-   * @returns {number} The Toggle's root index
-   */
+
   findToggleRootIndex(entryIndex, fk) {
     findToggleRootIndex.call(this, entryIndex, fk);
   }
@@ -255,11 +248,6 @@ export default class ToggleBlock {
     return render.call(this);
   }
 
-  /**
-   * Adds the initial status for the icon, and establishes
-   * the delay for the transition displayed when the icon
-   * is clicked.
-   */
   setInitialTransition() {
     setInitialTransition.call(this);
   }
@@ -282,9 +270,9 @@ export default class ToggleBlock {
    * @returns {ToggleBlockData} - saved data
    */
 
-       save(blockContent) {
-        save.call(this, blockContent);
-      }
+      save(blockContent) {
+      save.call(this, blockContent);
+    }
   
   getDescendantsNumber(fk) {
     return getDescendantsNumber.call(this, fk);
@@ -297,17 +285,8 @@ export default class ToggleBlock {
     return renderSettings.call(this);
   }
 
-  /**
-   * Add listener to move button.
-   * @param {HTMLDivElement} moveElement
-   * @param {number} movement // 0: Move down || 1: Move up
-   * @param {number} toggleIndex
-   */
   addEventsMoveButtons(moveElement, movement, toggleIndex) {
-    if (!moveElement) return;
-    moveElement.addEventListener("click", () => {
-      this.moveToggle(toggleIndex, movement);
-    });
+    addEventsMoveButtons.call(this, moveElement, movement, toggleIndex);
   }
 
   addEventDeleteButton(deleteElement, toggleIndex) {
@@ -338,10 +317,6 @@ export default class ToggleBlock {
     removeFullToggle.call(this, toggleIndex);
   }
 
-  /**
-   * Adds the required listeners to call the toggle shortcuts
-   * on the editor.
-   */
   addListeners() {
     addListeners.call(this);
   }
