@@ -1,9 +1,7 @@
 import "./index.css";
 import toggleIcon from "../assets/toggleIcon.svg";
-import { toolbox, enableLineBreaks, readOnlySupported } from "./actions";
 
 // Toggle Imports
-// ToDo : createToggle, removeFullToggle, removeToggle
 import {
   isAToggleItem,
   isAToggleRoot,
@@ -57,6 +55,7 @@ import {
   restoreItemAttributes,
   setDefaultContent,
   setInitialTransition,
+  toolbox, enableLineBreaks, readOnlySupported,
   setPlaceHolder,
 } from "./actions/actions";
 
@@ -77,7 +76,7 @@ export default class ToggleBlock {
   static enableLineBreaks = enableLineBreaks;
   static readOnlySupported = readOnlySupported;
   constructor(options) {
-    toggleBlockConstructor.call(this, options);
+    return toggleBlockConstructor.call(this, options);
   }
   isAToggleItem(holder) {
     return isAToggleItem(holder);
@@ -88,31 +87,27 @@ export default class ToggleBlock {
   }
 
   createParagraphFromToggleRoot(e) {
-    createParagraphFromToggleRoot.call(this, e);
+    return createParagraphFromToggleRoot.call(this, e);
   }
 
   createParagraphFromIt() {
-    this.setAttributesToNewBlock();
+    return this.setAttributesToNewBlock();
   }
 
-  setAttributesToNewBlock(
-    entryIndex = null,
-    foreignKey = this.wrapper.id,
-    block = null
-  ) {
-    setAttributesToNewBlock.call(this, entryIndex, foreignKey, block);
+  setAttributesToNewBlock(entryIndex = null, foreignKey = this.wrapper.id, block = null) {
+    return setAttributesToNewBlock.call(this, entryIndex, foreignKey, block);
   }
 
   setEventsToNestedBlock(e) {
-    setEventsToNestedBlock.call(this, e);
+    return setEventsToNestedBlock.call(this, e);
   }
 
-  removeBlock(holder, id, cursorPosition) {
-    removeBlock.call(this, holder, id, cursorPosition);
+  removeBlock(holder, id, cursorPosition){
+    return removeBlock.call(this, holder, id, cursorPosition);
   }
 
   removeAttributesFromNewBlock(destiny) {
-    removeAttributesFromNewBlock.call(this, destiny);
+    return removeAttributesFromNewBlock.call(this, destiny);
   }
 
   /**
@@ -177,15 +172,15 @@ export default class ToggleBlock {
     this.wrapper.appendChild(defaultContent);
   }
 
-  setFocusToggleRootAtTheEnd() {
-    setFocusToggleRootAtTheEnd.call(this);
+  setFocusToggleRootAtTheEnd(){
+    return setFocusToggleRootAtTheEnd.call(this);
   }
 
   /**
    * Adds the actions to do when the default content is clicked.
    */
   clickInDefaultContent() {
-    clickInDefaultContent.call(this);
+    return clickInDefaultContent.call(this);
   }
 
   /**
@@ -194,7 +189,7 @@ export default class ToggleBlock {
    * otherwise it removes it.
    */
   setDefaultContent() {
-    setDefaultContent.call(this);
+    return setDefaultContent.call(this);
   }
 
   /**
@@ -235,71 +230,58 @@ export default class ToggleBlock {
     }
   }
 
-  /**
-   * Returns the toggle's root index, given the index of one of its children
-   *
-   * @param {number} entryIndex - block index
-   * @param {String} fk - The block's foreign key
-   * @returns {number} The Toggle's root index
-   */
+
   findToggleRootIndex(entryIndex, fk) {
     return findToggleRootIndex.call(this, entryIndex, fk);
   }
 
-  extractBlock(entryIndex) {
-    extractBlock.call(this, entryIndex);
+   extractBlock(entryIndex) {
+    return extractBlock.call(this, entryIndex);
   }
 
   setPlaceHolder(e) {
-    setPlaceHolder.call(this, e);
+    return setPlaceHolder.call(this, e);
   }
 
   render() {
     return render.call(this);
   }
 
-  /**
-   * Adds the initial status for the icon, and establishes
-   * the delay for the transition displayed when the icon
-   * is clicked.
-   */
   setInitialTransition() {
-    setInitialTransition.call(this);
+    return setInitialTransition.call(this);
   }
 
   renderItems() {
-    renderItems.call(this);
+    return renderItems.call(this);
   }
 
   resolveToggleAction() {
-    resolveToggleAction.call(this);
+    return resolveToggleAction.call(this);
   }
 
   hideAndShowBlocks(foreignKey = this.wrapper.id, value = this.data.status) {
-    hideAndShowBlocks.call(this, foreignKey, value);
+    return hideAndShowBlocks.call(this, foreignKey, value);
   }
 
   save(blockContent) {
     return save.call(this, blockContent);
   }
 
+      save(blockContent) {
+      return save.call(this, blockContent);
+    }
+  
   getDescendantsNumber(fk) {
     return getDescendantsNumber.call(this, fk);
   }
   highlightToggleItems(fk) {
-    highlightToggleItems.call(this, fk);
+    return highlightToggleItems.call(this, fk);
   }
 
   renderSettings() {
     return renderSettings.call(this);
   }
 
-  /**
-   * Add listener to move button.
-   * @param {HTMLDivElement} moveElement
-   * @param {number} movement // 0: Move down || 1: Move up
-   * @param {number} toggleIndex
-   */
   addEventsMoveButtons(moveElement, movement, toggleIndex) {
     return addEventsMoveButtons.call(this, moveElement, movement, toggleIndex);
   }
@@ -341,10 +323,6 @@ export default class ToggleBlock {
     removeFullToggle.call(this, toggleIndex);
   }
 
-  /**
-   * Adds the required listeners to call the toggle shortcuts
-   * on the editor.
-   */
   addListeners() {
     addListeners.call(this);
   }
