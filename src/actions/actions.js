@@ -1,3 +1,4 @@
+import toggleIcon from '../../assets/toggleIcon.svg';
 /**
  * Add listener to delete button.
  * @param {HTMLDivElement} deleteElement
@@ -172,4 +173,32 @@ export function setPlaceHolder(e) {
 
     if (length === 0) children[1].textContent = "";
   }
+}
+
+/**
+ * Icon and title for displaying at the Toolbox
+ * @returns {{title: string, icon: string}}
+ */
+export function toolbox() {
+  return {
+    title: 'Toggle',
+    icon: toggleIcon,
+  };
+}
+
+/**
+ * Disables the creation of new EditorJS blocks by pressing
+ * 'enter' when in a toggle block.
+ */
+export function enableLineBreaks() {
+  return true;
+}
+
+/**
+ * Notify core that the read-only mode is supported
+ *
+ * @returns {boolean}
+ */
+export function readOnlySupported() {
+  return true;
 }
