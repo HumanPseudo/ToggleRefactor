@@ -2,28 +2,34 @@ import "./index.css";
 import toggleIcon from "../assets/toggleIcon.svg";
 import { toolbox, enableLineBreaks, readOnlySupported } from "./actions";
 
-
 // Toggle Imports
-// ToDo : createToggle and removeFullToggle
+// ToDo : createToggle, removeFullToggle, removeToggle
+import {
+  isAToggleItem,
+  isAToggleRoot,
+  setFocusToggleRootAtTheEnd,
+  resolveToggleAction,
+  assignToggleItemAttributes,
+  findToggleRootIndex,
+  highlightToggleItems,
+  isPartOfAToggle,
+  addEventsMoveButtons,
+  moveToggle,
+  removeFullToggle,
+} from "./toggle/actions";
 import { toggleBlockConstructor } from "./toggle/toggleBlockConstructor";
-import { isAToggleItem, isAToggleRoot, setFocusToggleRootAtTheEnd, resolveToggleAction, assignToggleItemAttributes, findToggleRootIndex, highlightToggleItems, isPartOfAToggle } from "./toggle/actions";
 import { createParagraphFromToggleRoot } from "./toggle/createParagraphFromToggleRoot";
-import { moveToggle } from "./toggle/moveToggle";
-import { removeFullToggle } from "./toggle/removeFullToggle";
-
-// Block Imports
-
 
 // Block Imports
 import { setAttributesToNewBlock } from "./blocks/setAttributesToNewBlock";
 import { findIndexOfParentBlock, extractBlock } from "./blocks/getParents";
 import { hideAndShowBlocks } from "./blocks/hideAndShowBlocks";
-import { removeBlock, removeAttributesFromNewBlock } from "./blocks/removeBlockAndAttributes";
+import {
+  removeBlock,
+  removeAttributesFromNewBlock,
+} from "./blocks/removeBlockAndAttributes";
 import { resetIdToCopiedBlock } from "./blocks/resetIdToCopiedBlock";
 import { save } from "./blocks/save";
-
-// Movement Imports
-
 
 // Movements Imports
 import { moveChildren } from "./movements/moveChildren";
@@ -33,21 +39,26 @@ import { moveDown } from "./movements/moveDown";
 import { moveUp } from "./movements/moveUp";
 
 // Nest Imports
-
-
-// Nest Imports
 import { nestBlock } from "./nest/nestBlock";
 import { setEventsToNestedBlock } from "./nest/setEventsToNestedBlock";
 import { setNestedBlockAttributes } from "./nest/setNestedBlockAttributes";
 
 // Render Imports
-
-
-// Render Imports
 import { render } from "./render/render";
 import { renderItems } from "./render/renderItems";
 import { renderSettings } from "./render/renderSettings";
-import { addEventDeleteButton, addListeners, clickInDefaultContent, getDescendantsNumber, restoreItemAttributes,setDefaultContent, setInitialTransition } from "./actions/actions";
+
+import {
+  addEventDeleteButton,
+  addListeners,
+  addSupportForCopyAndPasteAction,
+  clickInDefaultContent,
+  getDescendantsNumber,
+  restoreItemAttributes,
+  setDefaultContent,
+  setInitialTransition,
+  setPlaceHolder,
+} from "./actions/actions";
 
 /**
  * ToggleBlock for the Editor.js
@@ -231,12 +242,6 @@ export default class ToggleBlock {
     findToggleRootIndex.call(this, entryIndex, fk);
   }
 
-   /**
-   * Extracts a nested block from a toggle
-   * with 'shift + tab' combination
-   *
-   * @param {number} entryIndex - Block's index that will be extracted
-   */
    extractBlock(entryIndex) {
     extractBlock.call(this, entryIndex);
   }
@@ -514,14 +519,7 @@ export default class ToggleBlock {
   }
 
   isPartOfAToggle(block) {
-    const classes = Array.from(block.classList);
-    const classNamesToCheck = ['toggle-block__item', 'toggle-block__input', 'toggle-block__selector'];
-    const isToggleChild = classNamesToCheck.some(
-      (className) => block.getElementsByClassName(className).length !== 0,
-    );
-    const isToggle = classNamesToCheck.some((className) => classes.includes(className));
-
-    return isToggle || isToggleChild;
+    isPartOfAToggle.call(this, block);
   }
 
   /**
