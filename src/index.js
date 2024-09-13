@@ -55,7 +55,8 @@ import {
   restoreItemAttributes,
   setDefaultContent,
   setInitialTransition,
-  toolbox, enableLineBreaks, readOnlySupported,
+  enableLineBreaks,
+  readOnlySupported,
   setPlaceHolder,
 } from "./actions/actions";
 
@@ -72,7 +73,12 @@ import {
  */
 
 export default class ToggleBlock {
-  static toolbox = toolbox;
+  static get toolbox() {
+    return {
+      title: "Toggle",
+      icon: toggleIcon,
+    };
+  }
   static enableLineBreaks = enableLineBreaks;
   static readOnlySupported = readOnlySupported;
   constructor(options) {
@@ -94,7 +100,11 @@ export default class ToggleBlock {
     return this.setAttributesToNewBlock();
   }
 
-  setAttributesToNewBlock(entryIndex = null, foreignKey = this.wrapper.id, block = null) {
+  setAttributesToNewBlock(
+    entryIndex = null,
+    foreignKey = this.wrapper.id,
+    block = null
+  ) {
     return setAttributesToNewBlock.call(this, entryIndex, foreignKey, block);
   }
 
@@ -102,7 +112,7 @@ export default class ToggleBlock {
     return setEventsToNestedBlock.call(this, e);
   }
 
-  removeBlock(holder, id, cursorPosition){
+  removeBlock(holder, id, cursorPosition) {
     return removeBlock.call(this, holder, id, cursorPosition);
   }
 
@@ -172,7 +182,7 @@ export default class ToggleBlock {
     this.wrapper.appendChild(defaultContent);
   }
 
-  setFocusToggleRootAtTheEnd(){
+  setFocusToggleRootAtTheEnd() {
     return setFocusToggleRootAtTheEnd.call(this);
   }
 
@@ -230,12 +240,11 @@ export default class ToggleBlock {
     }
   }
 
-
   findToggleRootIndex(entryIndex, fk) {
     return findToggleRootIndex.call(this, entryIndex, fk);
   }
 
-   extractBlock(entryIndex) {
+  extractBlock(entryIndex) {
     return extractBlock.call(this, entryIndex);
   }
 
@@ -267,10 +276,10 @@ export default class ToggleBlock {
     return save.call(this, blockContent);
   }
 
-      save(blockContent) {
-      return save.call(this, blockContent);
-    }
-  
+  save(blockContent) {
+    return save.call(this, blockContent);
+  }
+
   getDescendantsNumber(fk) {
     return getDescendantsNumber.call(this, fk);
   }

@@ -182,7 +182,8 @@ export function setPlaceHolder(e) {
 export function toolbox() {
   return {
     title: 'Toggle',
-    icon: toggleIcon,
+    icon: 'toggleIcon',
+
   };
 }
 

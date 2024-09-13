@@ -1,4 +1,7 @@
+import toggleIcon from '../assets/toggleIcon.svg';
+
 // /toggle/createToggle.js
+
 export function createToggle() {
     this.wrapper = document.createElement('div');
     this.wrapper.classList.add('toggle-block__selector');
