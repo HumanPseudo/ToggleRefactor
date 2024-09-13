@@ -90,20 +90,24 @@ export default class ToggleBlock {
   createParagraphFromToggleRoot(e) {
     createParagraphFromToggleRoot.call(this, e);
   }
+
   createParagraphFromIt() {
     this.setAttributesToNewBlock();
   }
 
-  setAttributesToNewBlock(entryIndex = null, foreignKey = this.wrapper.id, block = null) {
+  setAttributesToNewBlock(
+    entryIndex = null,
+    foreignKey = this.wrapper.id,
+    block = null
+  ) {
     setAttributesToNewBlock.call(this, entryIndex, foreignKey, block);
   }
-
 
   setEventsToNestedBlock(e) {
     setEventsToNestedBlock.call(this, e);
   }
 
-  removeBlock(holder, id, cursorPosition){
+  removeBlock(holder, id, cursorPosition) {
     removeBlock.call(this, holder, id, cursorPosition);
   }
 
@@ -173,7 +177,7 @@ export default class ToggleBlock {
     this.wrapper.appendChild(defaultContent);
   }
 
-  setFocusToggleRootAtTheEnd(){
+  setFocusToggleRootAtTheEnd() {
     setFocusToggleRootAtTheEnd.call(this);
   }
 
@@ -239,17 +243,16 @@ export default class ToggleBlock {
    * @returns {number} The Toggle's root index
    */
   findToggleRootIndex(entryIndex, fk) {
-    findToggleRootIndex.call(this, entryIndex, fk);
+    return findToggleRootIndex.call(this, entryIndex, fk);
   }
 
-   extractBlock(entryIndex) {
+  extractBlock(entryIndex) {
     extractBlock.call(this, entryIndex);
   }
 
   setPlaceHolder(e) {
     setPlaceHolder.call(this, e);
   }
-
 
   render() {
     return render.call(this);
@@ -276,16 +279,10 @@ export default class ToggleBlock {
     hideAndShowBlocks.call(this, foreignKey, value);
   }
 
-       /**
-   * Extracts Tool's data from the view
-   * @param {HTMLDivElement} blockContent - Toggle tools rendered view
-   * @returns {ToggleBlockData} - saved data
-   */
+  save(blockContent) {
+    return save.call(this, blockContent);
+  }
 
-       save(blockContent) {
-        save.call(this, blockContent);
-      }
-  
   getDescendantsNumber(fk) {
     return getDescendantsNumber.call(this, fk);
   }
@@ -304,10 +301,7 @@ export default class ToggleBlock {
    * @param {number} toggleIndex
    */
   addEventsMoveButtons(moveElement, movement, toggleIndex) {
-    if (!moveElement) return;
-    moveElement.addEventListener("click", () => {
-      this.moveToggle(toggleIndex, movement);
-    });
+    return addEventsMoveButtons.call(this, moveElement, movement, toggleIndex);
   }
 
   addEventDeleteButton(deleteElement, toggleIndex) {
@@ -318,21 +312,30 @@ export default class ToggleBlock {
   }
 
   moveDown(toggleInitialIndex, toggleEndIndex) {
-    moveDown.call(this, toggleInitialIndex, toggleEndIndex);
+    return moveDown.call(this, toggleInitialIndex, toggleEndIndex);
   }
 
-  
   moveUp(toggleInitialIndex, toggleEndIndex) {
-    moveUp.call(this, toggleInitialIndex, toggleEndIndex);
+    return moveUp.call(this, toggleInitialIndex, toggleEndIndex);
   }
 
   findIndexOfParentBlock(currentToggleFk, blockFk, toggleInitialIndex) {
-    return findIndexOfParentBlock.call(this, currentToggleFk, blockFk, toggleInitialIndex);
+    return findIndexOfParentBlock.call(
+      this,
+      currentToggleFk,
+      blockFk,
+      toggleInitialIndex
+    );
   }
 
-
   moveDescendants(children, finalIndex, parentInitialIndex, direction) {
-    moveDescendants.call(this, children, finalIndex, parentInitialIndex, direction);
+    moveDescendants.call(
+      this,
+      children,
+      finalIndex,
+      parentInitialIndex,
+      direction
+    );
   }
   removeFullToggle(toggleIndex) {
     removeFullToggle.call(this, toggleIndex);
@@ -370,7 +373,7 @@ export default class ToggleBlock {
 
   getIndex = (target) => Array.from(target.parentNode.children).indexOf(target);
 
-  isChild(parentID, targetFK){
+  isChild(parentID, targetFK) {
     return isChild.call(this, parentID, targetFK);
   }
 
@@ -519,7 +522,7 @@ export default class ToggleBlock {
   }
 
   isPartOfAToggle(block) {
-    isPartOfAToggle.call(this, block);
+    return isPartOfAToggle.call(this, block);
   }
 
   /**
@@ -530,8 +533,7 @@ export default class ToggleBlock {
     addSupportForCopyAndPasteAction.call(this);
   }
 
-  resetIdToCopiedBlock(){
+  resetIdToCopiedBlock() {
     resetIdToCopiedBlock.call(this);
   }
-
 }
