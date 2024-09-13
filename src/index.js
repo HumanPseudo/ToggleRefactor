@@ -76,7 +76,7 @@ export default class ToggleBlock {
   static enableLineBreaks = enableLineBreaks;
   static readOnlySupported = readOnlySupported;
   constructor(options) {
-    toggleBlockConstructor.call(this, options);
+    return toggleBlockConstructor.call(this, options);
   }
   isAToggleItem(holder) {
     return isAToggleItem(holder);
@@ -87,27 +87,27 @@ export default class ToggleBlock {
   }
 
   createParagraphFromToggleRoot(e) {
-    createParagraphFromToggleRoot.call(this, e);
+    return createParagraphFromToggleRoot.call(this, e);
   }
   createParagraphFromIt() {
-    this.setAttributesToNewBlock();
+    return this.setAttributesToNewBlock();
   }
 
   setAttributesToNewBlock(entryIndex = null, foreignKey = this.wrapper.id, block = null) {
-    setAttributesToNewBlock.call(this, entryIndex, foreignKey, block);
+    return setAttributesToNewBlock.call(this, entryIndex, foreignKey, block);
   }
 
 
   setEventsToNestedBlock(e) {
-    setEventsToNestedBlock.call(this, e);
+    return setEventsToNestedBlock.call(this, e);
   }
 
   removeBlock(holder, id, cursorPosition){
-    removeBlock.call(this, holder, id, cursorPosition);
+    return removeBlock.call(this, holder, id, cursorPosition);
   }
 
   removeAttributesFromNewBlock(destiny) {
-    removeAttributesFromNewBlock.call(this, destiny);
+    return removeAttributesFromNewBlock.call(this, destiny);
   }
 
   /**
@@ -173,14 +173,14 @@ export default class ToggleBlock {
   }
 
   setFocusToggleRootAtTheEnd(){
-    setFocusToggleRootAtTheEnd.call(this);
+    return setFocusToggleRootAtTheEnd.call(this);
   }
 
   /**
    * Adds the actions to do when the default content is clicked.
    */
   clickInDefaultContent() {
-    clickInDefaultContent.call(this);
+    return clickInDefaultContent.call(this);
   }
 
   /**
@@ -189,7 +189,7 @@ export default class ToggleBlock {
    * otherwise it removes it.
    */
   setDefaultContent() {
-    setDefaultContent.call(this);
+    return setDefaultContent.call(this);
   }
 
   /**
@@ -232,15 +232,15 @@ export default class ToggleBlock {
 
 
   findToggleRootIndex(entryIndex, fk) {
-    findToggleRootIndex.call(this, entryIndex, fk);
+    return findToggleRootIndex.call(this, entryIndex, fk);
   }
 
    extractBlock(entryIndex) {
-    extractBlock.call(this, entryIndex);
+    return extractBlock.call(this, entryIndex);
   }
 
   setPlaceHolder(e) {
-    setPlaceHolder.call(this, e);
+    return setPlaceHolder.call(this, e);
   }
 
 
@@ -249,19 +249,19 @@ export default class ToggleBlock {
   }
 
   setInitialTransition() {
-    setInitialTransition.call(this);
+    return setInitialTransition.call(this);
   }
 
   renderItems() {
-    renderItems.call(this);
+    return renderItems.call(this);
   }
 
   resolveToggleAction() {
-    resolveToggleAction.call(this);
+    return resolveToggleAction.call(this);
   }
 
   hideAndShowBlocks(foreignKey = this.wrapper.id, value = this.data.status) {
-    hideAndShowBlocks.call(this, foreignKey, value);
+    return hideAndShowBlocks.call(this, foreignKey, value);
   }
 
        /**
@@ -271,14 +271,14 @@ export default class ToggleBlock {
    */
 
       save(blockContent) {
-      save.call(this, blockContent);
+      return save.call(this, blockContent);
     }
   
   getDescendantsNumber(fk) {
     return getDescendantsNumber.call(this, fk);
   }
   highlightToggleItems(fk) {
-    highlightToggleItems.call(this, fk);
+    return highlightToggleItems.call(this, fk);
   }
 
   renderSettings() {
@@ -286,7 +286,7 @@ export default class ToggleBlock {
   }
 
   addEventsMoveButtons(moveElement, movement, toggleIndex) {
-    addEventsMoveButtons.call(this, moveElement, movement, toggleIndex);
+    return addEventsMoveButtons.call(this, moveElement, movement, toggleIndex);
   }
 
   addEventDeleteButton(deleteElement, toggleIndex) {
