@@ -8,7 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 export function setAttributesToNewBlock(entryIndex = null, foreignKey = this.wrapper.id, block = null) {
     const index = entryIndex === null ? this.api.blocks.getCurrentBlockIndex() : entryIndex;
     const newBlock = block || this.api.blocks.getBlockByIndex(index);
-    console.log('estoy cambiando atributos');
 
     const id = uuidv4();
     if (!this.itemsId.includes(newBlock.id)) {
