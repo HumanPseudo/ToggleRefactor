@@ -179,7 +179,7 @@ export default class ToggleBlock {
       'toggle-block__content-default',
       'toggle-block__hidden',
     );
-    defaultContent.innerHTML = this.setDefaultContent;
+    defaultContent.innerHTML = this.defaultContent;
 
     this.wrapper.appendChild(icon);
     this.wrapper.appendChild(input);
