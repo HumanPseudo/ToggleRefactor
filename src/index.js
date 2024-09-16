@@ -21,9 +21,9 @@ import createParagraphFromToggleRoot from './toggle/createParagraphFromToggleRoo
 // Block Imports
 import setAttributesToNewBlock from './blocks/setAttributesToNewBlock';
 // eslint-disable-next-line import/no-duplicates
-import findIndexOfParentBlock from './blocks/getParents';
+import findIndexOfParentBlock from './blocks/findIndexOfParentBlock';
 // eslint-disable-next-line import/no-duplicates
-import extractBlock from './blocks/getParents';
+import extractBlock from './blocks/extractBlock';
 import hideAndShowBlocks from './blocks/hideAndShowBlocks';
 import {
   removeBlock,
@@ -179,7 +179,7 @@ export default class ToggleBlock {
       'toggle-block__content-default',
       'toggle-block__hidden',
     );
-    defaultContent.innerHTML = this.setDefaultContent;
+    defaultContent.innerHTML = this.defaultContent;
 
     this.wrapper.appendChild(icon);
     this.wrapper.appendChild(input);
