@@ -60,3 +60,5 @@ export function findIndexOfParentBlock(currentToggleFk, blockFk, toggleInitialIn
   }
   return parentBlockIndex;
 }
+
+export default { extractBlock, findIndexOfParentBlock }; 
