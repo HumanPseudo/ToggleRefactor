@@ -1,3 +1,4 @@
+import resetIdToCopiedBlock from '../blocks/resetIdToCopiedBlock';
 /**
  * Returns true if the div element is a toggle child, otherwise, returns false
  * @param {HTMLDivElement} holder
@@ -13,7 +14,10 @@ export function isAToggleItem(holder) {
  * @returns {boolean}
  */
 export function isAToggleRoot(holder) {
-  return holder.classList.contains('toggle-block__selector') || Boolean(holder.querySelector('.toggle-block__selector'));
+  return (
+    holder.classList.contains('toggle-block__selector')
+    || Boolean(holder.querySelector('.toggle-block__selector'))
+  );
 }
 
 /**
@@ -43,13 +47,16 @@ export function resolveToggleAction() {
   this.data.status = this.data.status === 'closed' ? 'open' : 'closed';
   svg.style.transform = this.data.status === 'open' ? 'rotate(90deg)' : 'rotate(0deg)';
 
-  const toggleBlock = this.api.blocks.getBlockByIndex(this.api.blocks.getCurrentBlockIndex());
+  const toggleBlock = this.api.blocks.getBlockByIndex(
+    this.api.blocks.getCurrentBlockIndex(),
+  );
   toggleBlock.holder.setAttribute('status', this.data.status);
 }
 
 export function assignToggleItemAttributes(isTargetAToggle, dropTarget) {
   if (isTargetAToggle) {
-    const foreignKey = dropTarget.getAttribute('foreignKey') || dropTarget.querySelector('.toggle-block__selector').getAttribute('id');
+    const foreignKey = dropTarget.getAttribute('foreignKey')
+      || dropTarget.querySelector('.toggle-block__selector').getAttribute('id');
     const newToggleIndex = this.getIndex(this.holderDragged);
     this.setAttributesToNewBlock(newToggleIndex, foreignKey);
   }
@@ -66,10 +73,14 @@ export function findToggleRootIndex(entryIndex, fk) {
   const { holder } = block;
 
   if (this.isAToggleRoot(holder)) {
-    const id = holder.querySelector('.toggle-block__selector').getAttribute('id');
+    const id = holder
+      .querySelector('.toggle-block__selector')
+      .getAttribute('id');
     if (fk === id) return entryIndex;
   }
-  return entryIndex - 1 >= 0 ? this.findToggleRootIndex(entryIndex - 1, fk) : -1;
+  return entryIndex - 1 >= 0
+    ? this.findToggleRootIndex(entryIndex - 1, fk)
+    : -1;
 }
 
 /**
@@ -81,7 +92,9 @@ export function highlightToggleItems(fk) {
   listChildren.forEach((child) => {
     child.classList.add('ce-block--selected');
     if (child.hasAttribute('status')) {
-      const childId = child.querySelector('.toggle-block__selector').getAttribute('id');
+      const childId = child
+        .querySelector('.toggle-block__selector')
+        .getAttribute('id');
       this.highlightToggleItems(childId);
     }
   });
@@ -93,8 +106,14 @@ export function highlightToggleItems(fk) {
  * @returns {boolean}
  */
 export function isPartOfAToggle(block) {
-  const classNamesToCheck = ['toggle-block__item', 'toggle-block__input', 'toggle-block__selector'];
-  const isToggleChild = classNamesToCheck.some((className) => block.getElementsByClassName(className).length !== 0);
+  const classNamesToCheck = [
+    'toggle-block__item',
+    'toggle-block__input',
+    'toggle-block__selector',
+  ];
+  const isToggleChild = classNamesToCheck.some(
+    (className) => block.getElementsByClassName(className).length !== 0,
+  );
   const isToggle = classNamesToCheck.some((className) => block.classList.contains(className));
 
   return isToggle || isToggleChild;
@@ -108,7 +127,7 @@ export function isPartOfAToggle(block) {
  */
 export function addEventsMoveButtons(moveElement, movement, toggleIndex) {
   if (!moveElement) return;
-  moveElement.addEventListener("click", () => this.moveToggle(toggleIndex, movement));
+  moveElement.addEventListener('click', () => this.moveToggle(toggleIndex, movement));
 }
 
 /**
@@ -126,7 +145,10 @@ export function moveToggle(toggleInitialIndex, direction) {
 
     this.move(toggleInitialIndex, currentToggleIndex);
     if (toggleInitialIndex >= 0 && toggleEndIndex <= blocks - 1) {
-      direction === 0 ? this.moveDown(toggleInitialIndex, toggleEndIndex) : this.moveUp(toggleInitialIndex, toggleEndIndex);
+      // eslint-disable-next-line no-unused-expressions
+      direction === 0
+        ? this.moveDown(toggleInitialIndex, toggleEndIndex)
+        : this.moveUp(toggleInitialIndex, toggleEndIndex);
     }
   }
 }
@@ -136,9 +158,12 @@ export function moveToggle(toggleInitialIndex, direction) {
  * @param {number} toggleIndex
  */
 export function removeFullToggle(toggleIndex) {
-  const children = document.querySelectorAll(`div[foreignKey="${this.wrapper.id}"]`);
+  const children = document.querySelectorAll(
+    `div[foreignKey="${this.wrapper.id}"]`,
+  );
   const { length } = children;
 
+  // eslint-disable-next-line no-plusplus
   for (let i = toggleIndex; i < toggleIndex + length; i++) {
     setTimeout(() => this.api.blocks.delete(toggleIndex));
   }
@@ -149,15 +174,19 @@ export function removeFullToggle(toggleIndex) {
  */
 export function addSupportForCopyAndPasteAction() {
   if (!this.readOnly) {
-    const target = document.querySelector("div.codex-editor__redactor");
+    const target = document.querySelector('div.codex-editor__redactor');
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
-        if (mutation.type === "childList") {
+        if (mutation.type === 'childList') {
           setTimeout(resetIdToCopiedBlock.bind(this, mutation));
         }
       });
     });
 
-    observer.observe(target, { attributes: true, childList: true, characterData: true });
+    observer.observe(target, {
+      attributes: true,
+      childList: true,
+      characterData: true,
+    });
   }
 }

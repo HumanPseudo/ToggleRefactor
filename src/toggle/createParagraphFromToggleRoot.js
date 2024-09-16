@@ -10,8 +10,8 @@
  *
  * @param {KeyboardEvent} e - key up event
  */
-export function createParagraphFromToggleRoot(e) {
-  if (e.code === "Enter") {
+export default function createParagraphFromToggleRoot(e) {
+  if (e.code === 'Enter') {
     const currentPosition = document.getSelection().focusOffset;
     const originalIndex = this.api.blocks.getCurrentBlockIndex();
     const block = this.api.blocks.getBlockByIndex(originalIndex);
@@ -20,10 +20,10 @@ export function createParagraphFromToggleRoot(e) {
     const blockContent = blockCover.firstChild;
     const content = blockContent.children[1].innerHTML;
 
-    const breakLine = content.indexOf("<br>");
+    const breakLine = content.indexOf('<br>');
     const end = breakLine === -1 ? content.length : breakLine;
 
-    if (this.data.status === "closed") {
+    if (this.data.status === 'closed') {
       this.resolveToggleAction();
       this.hideAndShowBlocks();
     }
@@ -31,15 +31,15 @@ export function createParagraphFromToggleRoot(e) {
     const newText = content.slice(end + 4, currentPosition.focusOffset);
     blockContent.children[1].innerHTML = content.slice(
       currentPosition.focusOffset,
-      end
+      end,
     );
 
     this.api.blocks.insert(
-      "paragraph",
+      'paragraph',
       { text: newText },
       {},
       originalIndex + 1,
-      1
+      1,
     );
     this.setAttributesToNewBlock();
   }

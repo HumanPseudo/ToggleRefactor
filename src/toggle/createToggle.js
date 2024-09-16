@@ -1,8 +1,11 @@
-import toggleIcon from '../assets/toggleIcon.svg';
+import toggleIcon from '../../assets/toggleIcon.svg';
 
 // /toggle/createToggle.js
 
-export function createToggle() {
+// /toggle/createToggle.js
+// eslint-disable-next-line import/prefer-default-export
+export class createToggle {
+  constructor() {
     this.wrapper = document.createElement('div');
     this.wrapper.classList.add('toggle-block__selector');
     this.wrapper.id = this.data.fk;
@@ -40,4 +43,5 @@ export function createToggle() {
 
       input.addEventListener('focus', this.setNestedBlockAttributes.bind(this));
     }
+  }
 }

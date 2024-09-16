@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
  * api - Editor.js API
  * readOnly - read-only mode status
  */
-export function toggleBlockConstructor({
+export default function toggleBlockConstructor({
   data, api, readOnly, config,
 }) {
   this.data = {

@@ -1,5 +1,5 @@
-import "./index.css";
-import toggleIcon from "../assets/toggleIcon.svg";
+import './index.css';
+import toggleIcon from '../assets/toggleIcon.svg';
 
 // Toggle Imports
 import {
@@ -14,37 +14,40 @@ import {
   addEventsMoveButtons,
   moveToggle,
   removeFullToggle,
-} from "./toggle/actions";
-import { toggleBlockConstructor } from "./toggle/toggleBlockConstructor";
-import { createParagraphFromToggleRoot } from "./toggle/createParagraphFromToggleRoot";
+} from './toggle/actions';
+import toggleBlockConstructor from './toggle/toggleBlockConstructor';
+import createParagraphFromToggleRoot from './toggle/createParagraphFromToggleRoot';
 
 // Block Imports
-import { setAttributesToNewBlock } from "./blocks/setAttributesToNewBlock";
-import { findIndexOfParentBlock, extractBlock } from "./blocks/getParents";
-import { hideAndShowBlocks } from "./blocks/hideAndShowBlocks";
+import setAttributesToNewBlock from './blocks/setAttributesToNewBlock';
+// eslint-disable-next-line import/no-duplicates
+import findIndexOfParentBlock from './blocks/getParents';
+// eslint-disable-next-line import/no-duplicates
+import extractBlock from './blocks/getParents';
+import hideAndShowBlocks from './blocks/hideAndShowBlocks';
 import {
   removeBlock,
   removeAttributesFromNewBlock,
-} from "./blocks/removeBlockAndAttributes";
-import { resetIdToCopiedBlock } from "./blocks/resetIdToCopiedBlock";
-import { save } from "./blocks/save";
+} from './blocks/removeBlockAndAttributes';
+import resetIdToCopiedBlock from './blocks/resetIdToCopiedBlock';
+import save from './blocks/save';
 
 // Movements Imports
-import { moveChildren } from "./movements/moveChildren";
-import { isChild } from "./movements/isChild";
-import { moveDescendants } from "./movements/moveDescendants";
-import { moveDown } from "./movements/moveDown";
-import { moveUp } from "./movements/moveUp";
+import moveChildren from './movements/moveChildren';
+import isChild from './movements/isChild';
+import moveDescendants from './movements/moveDescendants';
+import moveDown from './movements/moveDown';
+import moveUp from './movements/moveUp';
 
 // Nest Imports
-import { nestBlock } from "./nest/nestBlock";
-import { setEventsToNestedBlock } from "./nest/setEventsToNestedBlock";
-import { setNestedBlockAttributes } from "./nest/setNestedBlockAttributes";
+import nestBlock from './nest/nestBlock';
+import setEventsToNestedBlock from './nest/setEventsToNestedBlock';
+import setNestedBlockAttributes from './nest/setNestedBlockAttributes';
 
 // Render Imports
-import { render } from "./render/render";
-import { renderItems } from "./render/renderItems";
-import { renderSettings } from "./render/renderSettings";
+import render from './render/render';
+import renderItems from './render/renderItems';
+import renderSettings from './render/renderSettings';
 
 import {
   addEventDeleteButton,
@@ -53,12 +56,11 @@ import {
   clickInDefaultContent,
   getDescendantsNumber,
   restoreItemAttributes,
-  setDefaultContent,
   setInitialTransition,
   enableLineBreaks,
   readOnlySupported,
   setPlaceHolder,
-} from "./actions/actions";
+} from './actions/actions';
 
 /**
  * ToggleBlock for the Editor.js
@@ -75,15 +77,19 @@ import {
 export default class ToggleBlock {
   static get toolbox() {
     return {
-      title: "Toggle",
+      title: 'Toggle',
       icon: toggleIcon,
     };
   }
+
   static enableLineBreaks = enableLineBreaks;
+
   static readOnlySupported = readOnlySupported;
+
   constructor(options) {
-    return toggleBlockConstructor.call(this, options);
+    toggleBlockConstructor.call(this, options);
   }
+
   isAToggleItem(holder) {
     return isAToggleItem(holder);
   }
@@ -103,7 +109,7 @@ export default class ToggleBlock {
   setAttributesToNewBlock(
     entryIndex = null,
     foreignKey = this.wrapper.id,
-    block = null
+    block = null,
   ) {
     return setAttributesToNewBlock.call(this, entryIndex, foreignKey, block);
   }
@@ -125,57 +131,55 @@ export default class ToggleBlock {
    * and sets the default content.
    */
   createToggle() {
-    this.wrapper = document.createElement("div");
-    this.wrapper.classList.add("toggle-block__selector");
+    this.wrapper = document.createElement('div');
+    this.wrapper.classList.add('toggle-block__selector');
     this.wrapper.id = this.data.fk;
 
-    const icon = document.createElement("span");
-    const input = document.createElement("div");
-    const defaultContent = document.createElement("div");
+    const icon = document.createElement('span');
+    const input = document.createElement('div');
+    const defaultContent = document.createElement('div');
 
-    icon.classList.add("toggle-block__icon");
+    icon.classList.add('toggle-block__icon');
     icon.innerHTML = toggleIcon;
 
-    input.classList.add("toggle-block__input");
-    input.setAttribute("contentEditable", !this.readOnly);
-    input.innerHTML = this.data.text || "";
+    input.classList.add('toggle-block__input');
+    input.setAttribute('contentEditable', !this.readOnly);
+    input.innerHTML = this.data.text || '';
 
     // Events
     if (!this.readOnly) {
       // Events to create other blocks and destroy the toggle
       input.addEventListener(
-        "keyup",
-        this.createParagraphFromToggleRoot.bind(this)
+        'keyup',
+        this.createParagraphFromToggleRoot.bind(this),
       );
-      input.addEventListener("keydown", this.removeToggle.bind(this));
+      input.addEventListener('keydown', this.removeToggle.bind(this));
 
       // Sets the focus at the end of the text when a nested block is deleted with the backspace key
-      input.addEventListener("focusin", () =>
-        this.setFocusToggleRootAtTheEnd()
-      );
+      input.addEventListener('focusin', () => this.setFocusToggleRootAtTheEnd());
 
       // Establishes the placeholder for the toggle root when it's empty
-      input.addEventListener("keyup", this.setPlaceHolder.bind(this));
-      input.setAttribute("placeholder", this.placeholder);
+      input.addEventListener('keyup', this.setPlaceHolder.bind(this));
+      input.setAttribute('placeholder', this.placeholder);
 
       // Calculates the number of toggle items
-      input.addEventListener("focus", this.setDefaultContent.bind(this));
-      input.addEventListener("focusout", this.setDefaultContent.bind(this));
+      input.addEventListener('focus', this.setDefaultContent.bind(this));
+      input.addEventListener('focusout', this.setDefaultContent.bind(this));
 
       // Event to add a block when the default content is clicked
       defaultContent.addEventListener(
-        "click",
-        this.clickInDefaultContent.bind(this)
+        'click',
+        this.clickInDefaultContent.bind(this),
       );
 
-      input.addEventListener("focus", this.setNestedBlockAttributes.bind(this));
+      input.addEventListener('focus', this.setNestedBlockAttributes.bind(this));
     }
 
     defaultContent.classList.add(
-      "toggle-block__content-default",
-      "toggle-block__hidden"
+      'toggle-block__content-default',
+      'toggle-block__hidden',
     );
-    defaultContent.innerHTML = this.defaultContent;
+    defaultContent.innerHTML = this.setDefaultContent;
 
     this.wrapper.appendChild(icon);
     this.wrapper.appendChild(input);
@@ -199,7 +203,15 @@ export default class ToggleBlock {
    * otherwise it removes it.
    */
   setDefaultContent() {
-    return setDefaultContent.call(this);
+    const children = document.querySelectorAll(
+      `div[foreignKey="${this.wrapper.id}"]`,
+    );
+    const { firstChild, lastChild } = this.wrapper;
+    const { status } = this.data;
+    const value = children.length > 0 || status === 'closed';
+
+    lastChild.classList.toggle('toggle-block__hidden', value);
+    firstChild.style.color = children.length === 0 ? 'gray' : 'black';
   }
 
   /**
@@ -209,7 +221,7 @@ export default class ToggleBlock {
    * @param {KeyboardEvent} e - key down event
    */
   removeToggle(e) {
-    if (e.code === "Backspace") {
+    if (e.code === 'Backspace') {
       const { children } = this.wrapper;
       const content = children[1].innerHTML;
 
@@ -217,10 +229,10 @@ export default class ToggleBlock {
 
       if (cursorPosition.focusOffset === 0) {
         const index = this.api.blocks.getCurrentBlockIndex();
-        const breakLine = content.indexOf("<br>");
+        const breakLine = content.indexOf('<br>');
         const end = breakLine === -1 ? content.length : breakLine;
         const blocks = document.querySelectorAll(
-          `div[foreignKey="${this.wrapper.id}"]`
+          `div[foreignKey="${this.wrapper.id}"]`,
         );
 
         for (let i = 1; i < blocks.length + 1; i += 1) {
@@ -229,11 +241,11 @@ export default class ToggleBlock {
 
         this.api.blocks.delete(index);
         this.api.blocks.insert(
-          "paragraph",
+          'paragraph',
           { text: content.slice(0, end) },
           {},
           index,
-          1
+          1,
         );
         this.api.caret.setToBlock(index);
       }
@@ -276,13 +288,10 @@ export default class ToggleBlock {
     return save.call(this, blockContent);
   }
 
-  save(blockContent) {
-    return save.call(this, blockContent);
-  }
-
   getDescendantsNumber(fk) {
     return getDescendantsNumber.call(this, fk);
   }
+
   highlightToggleItems(fk) {
     return highlightToggleItems.call(this, fk);
   }
@@ -298,6 +307,7 @@ export default class ToggleBlock {
   addEventDeleteButton(deleteElement, toggleIndex) {
     addEventDeleteButton.call(this, deleteElement, toggleIndex);
   }
+
   moveToggle(toggleInitialIndex, direction) {
     moveToggle.call(this, toggleInitialIndex, direction);
   }
@@ -315,7 +325,7 @@ export default class ToggleBlock {
       this,
       currentToggleFk,
       blockFk,
-      toggleInitialIndex
+      toggleInitialIndex,
     );
   }
 
@@ -325,9 +335,10 @@ export default class ToggleBlock {
       children,
       finalIndex,
       parentInitialIndex,
-      direction
+      direction,
     );
   }
+
   removeFullToggle(toggleIndex) {
     removeFullToggle.call(this, toggleIndex);
   }
@@ -342,11 +353,11 @@ export default class ToggleBlock {
    */
   addSupportForUndoAndRedoActions() {
     if (!this.readOnly) {
-      const target = document.querySelector("div.codex-editor__redactor");
+      const target = document.querySelector('div.codex-editor__redactor');
 
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-          if (mutation.type === "childList") {
+          if (mutation.type === 'childList') {
             setTimeout(this.restoreItemAttributes.bind(this, mutation));
           }
         });
@@ -378,29 +389,29 @@ export default class ToggleBlock {
       // Set status in attribute to a proper hide and show
       const toggleBlock = document.querySelector(`#${this.wrapper.id}`)
         .parentNode.parentNode;
-      toggleBlock.setAttribute("status", this.data.status);
+      toggleBlock.setAttribute('status', this.data.status);
 
       const settingsButton = document.querySelector(
-        ".ce-toolbar__settings-btn"
+        '.ce-toolbar__settings-btn',
       );
-      settingsButton.setAttribute("draggable", "true");
-      settingsButton.addEventListener("dragstart", () => {
+      settingsButton.setAttribute('draggable', 'true');
+      settingsButton.addEventListener('dragstart', () => {
         this.startBlock = this.api.blocks.getCurrentBlockIndex();
         this.nameDragged = this.api.blocks.getBlockByIndex(
-          this.startBlock
+          this.startBlock,
         ).name;
         this.holderDragged = this.api.blocks.getBlockByIndex(
-          this.startBlock
+          this.startBlock,
         ).holder;
       });
 
-      document.addEventListener("drop", (event) => {
+      document.addEventListener('drop', (event) => {
         // Get the position when item was dropped
         const { target } = event;
         if (document.contains(target)) {
-          const dropTarget = target.classList.contains("ce-block")
+          const dropTarget = target.classList.contains('ce-block')
             ? target
-            : target.closest(".ce-block");
+            : target.closest('.ce-block');
           if (dropTarget && dropTarget !== this.holderDragged) {
             let endBlock = this.getIndex(dropTarget);
 
@@ -408,30 +419,29 @@ export default class ToggleBlock {
             endBlock = this.startBlock < endBlock ? endBlock + 1 : endBlock;
 
             // Check if the item dropped is another toggle
-            const isTargetAToggle =
-              dropTarget.querySelectorAll(".toggle-block__selector").length >
-                0 || dropTarget.getAttribute("foreignKey") !== null;
+            const isTargetAToggle = dropTarget.querySelectorAll('.toggle-block__selector').length
+                > 0 || dropTarget.getAttribute('foreignKey') !== null;
 
             setTimeout(() => {
               // Verify if the item dropped is the toggle
-              if (this.nameDragged === "toggle") {
+              if (this.nameDragged === 'toggle') {
                 // Verify if the toggle dropped is the same of this eventListener
                 const currentToggleDropped = this.holderDragged.querySelector(
-                  `#${this.wrapper.id}`
+                  `#${this.wrapper.id}`,
                 );
 
                 if (currentToggleDropped) {
                   // Check if the toggle dropped was not dropped in its children
                   if (
                     !this.isChild(
-                      currentToggleDropped.getAttribute("id"),
-                      dropTarget.getAttribute("foreignKey")
+                      currentToggleDropped.getAttribute('id'),
+                      dropTarget.getAttribute('foreignKey'),
                     )
                   ) {
                     // If is a toggle we have to add the attributes to make it a part of the toggle
                     this.assignToggleItemAttributes(
                       isTargetAToggle,
-                      dropTarget
+                      dropTarget,
                     );
                     this.moveChildren(endBlock);
                   } else {
@@ -485,15 +495,15 @@ export default class ToggleBlock {
   createToggleWithShortcut(blockContainer) {
     const content = blockContainer.textContent;
 
-    if (content[0] === ">" && !this.isPartOfAToggle(blockContainer)) {
+    if (content[0] === '>' && !this.isPartOfAToggle(blockContainer)) {
       const blockCaller = this.api.blocks.getCurrentBlockIndex();
 
       this.api.blocks.insert(
-        "toggle",
+        'toggle',
         { text: content.slice(2) },
         this.api,
         blockCaller,
-        true
+        true,
       );
       this.api.blocks.delete(blockCaller + 1);
       this.api.caret.setToBlock(blockCaller);
